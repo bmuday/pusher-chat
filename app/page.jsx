@@ -5,7 +5,9 @@ import { UserButton, useUser } from "@clerk/nextjs";
 
 const Chat = () => {
   const { user } = useUser();
+  console.log("user", user);
   const { username } = user;
+  console.log("username", username);
   const [chats, setChats] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
 
