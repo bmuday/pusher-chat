@@ -9,7 +9,7 @@ export const pusher = new Pusher({
   useTLS: true,
 });
 
-export default async function POST(req, res) {
+export async function POST(req, res) {
   const { message, sender } = req.body;
   await pusher.trigger("chat", "chat-event", {
     message,
