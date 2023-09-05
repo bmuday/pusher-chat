@@ -4,10 +4,12 @@ import Pusher from "pusher-js";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 const Chat = () => {
-  const { user } = useUser();
-  console.log("user", user);
-  const { username } = user;
-  console.log("username", username);
+  // const { user } = useUser();
+  // console.log("user", user);
+  // const { username } = user;
+  // console.log("username", username);
+  const user = {};
+  const username = "baboulass";
   const [chats, setChats] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
 
