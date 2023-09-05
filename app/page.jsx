@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import Pusher from "pusher-js";
 import { UserButton, useUser } from "@clerk/nextjs";
@@ -35,7 +36,12 @@ const Chat = () => {
 
   return (
     <>
-      {user && <p>Hello, {username}</p>}
+      {user && (
+        <div className="flex">
+          <p>Hello, {username}</p>
+          <UserButton />
+        </div>
+      )}
       <div>
         {chats.map((chat, index) => (
           <div key={index}>
