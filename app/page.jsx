@@ -34,7 +34,7 @@ const Chat = () => {
     e.preventDefault();
     await fetch("/api/pusher", {
       method: "POST",
-      body: JSON.stringify({ message: messageToSend, sender }),
+      body: JSON.stringify({ message: messageToSend, sender: username }),
     });
   };
 
