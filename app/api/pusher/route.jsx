@@ -1,13 +1,5 @@
-import Pusher from "pusher";
 import { NextResponse } from "next/server";
-
-export const pusher = new Pusher({
-  appId: process.env.app_id,
-  key: process.env.key,
-  secret: process.env.secret,
-  cluster: process.env.cluster,
-  useTLS: true,
-});
+import { pusher } from "../../(lib)/pusher";
 
 export async function POST(req, res) {
   const { message, sender } = req.body;
