@@ -3,6 +3,7 @@ import { pusher } from "../../(lib)/pusher";
 
 export async function POST(req, res) {
   const { message, sender } = req.body;
+  console.log("body", req.body);
   await pusher.trigger("chat", "chat-event", {
     message,
     sender,

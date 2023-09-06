@@ -21,6 +21,7 @@ const Chat = () => {
     const channel = pusher.subscribe("chat");
 
     channel.bind("chat-event", (data) => {
+      console.log("data", data);
       const { sender, message } = data;
       console.log("chat-event");
       setChats((prevState) => [...prevState, { sender, message }]);
