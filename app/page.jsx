@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Pusher from "pusher-js";
 import { UserButton, useUser } from "@clerk/nextjs";
 
-const Chat = () => {
+export default function Chat() {
   const [user, setUser] = useState(null);
   const [chats, setChats] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
@@ -76,6 +76,4 @@ const Chat = () => {
       </form>
     </>
   );
-};
-
-export default Chat;
+}
