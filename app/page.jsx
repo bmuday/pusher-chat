@@ -4,16 +4,18 @@ import Pusher from "pusher-js";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 const Chat = () => {
-  // const { user } = useUser();
-  // console.log("user", user);
-  // const { username } = user;
-  // console.log("username", username);
-  const user = {};
-  const username = "baboulass";
+  const [user, setUser] = useState(null);
   const [chats, setChats] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
 
   useEffect(() => {
+    if (process.env.NEXT_PUBLIC_ENV === "prod") {
+      const user = useUser();
+      setUser(user);
+    } else {
+      setUser({ username: "baboulass" });
+    }
+
     const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY, {
       cluster: process.env.NEXT_PUBLIC_CLUSTER,
     });
@@ -38,7 +40,7 @@ const Chat = () => {
     e.preventDefault();
     await fetch("/api/pusher", {
       method: "POST",
-      body: JSON.stringify({ message: messageToSend, sender: username }),
+      body: JSON.stringify({ message: messageToSend, sender: user?.username }),
     });
   };
 
@@ -46,7 +48,7 @@ const Chat = () => {
     <>
       {user && (
         <div className="flex">
-          <p>Hello, {username}</p>
+          <p>Hello, {user.username}</p>
           <UserButton />
         </div>
       )}
