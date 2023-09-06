@@ -22,6 +22,7 @@ const Chat = () => {
 
     channel.bind("chat-event", (data) => {
       const { sender, message } = data;
+      console.log("chat-event");
       setChats((prevState) => [...prevState, { sender, message }]);
     });
 
@@ -29,6 +30,8 @@ const Chat = () => {
       pusher.unsubscribe("chat");
     };
   }, []);
+
+  console.log("chats", chats);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
