@@ -1,20 +1,15 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Pusher from "pusher-js";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 export default function Chat() {
-  const [user, setUser] = useState(null);
-  const [chats, setChats] = useState([]);
-  const [messageToSend, setMessageToSend] = useState("");
-
+  const [messages, setMessages] = useState([]);
+  const messageRef = useRef("");
+  // const user = useUser()
+  const user = { username: "baboulass" } ;
+  
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_ENV === "prod") {
-      const user = useUser();
-      setUser(user);
-    } else {
-      setUser({ username: "baboulass" });
-    }
 
     const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY, {
       cluster: process.env.NEXT_PUBLIC_CLUSTER,
@@ -23,10 +18,8 @@ export default function Chat() {
     const channel = pusher.subscribe("chat");
 
     channel.bind("chat-event", (data) => {
-      console.log("data", data);
-      const { sender, message } = data;
-      console.log("chat-event");
-      setChats((prevState) => [...prevState, { sender, message }]);
+      const { sender, message, sentAt } = data;
+      setMessages((messages) => [...messages, { sender, message, sentAt }]);
     });
 
     return () => {
@@ -34,13 +27,20 @@ export default function Chat() {
     };
   }, []);
 
-  console.log("chats", chats);
+  console.log("messages", messages);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const {value} = messageRef.current
+    const date = new Date()
+const time =
+  ("00" + date.getHours()).slice(-2) + ":" +
+  ("00" + date.getMinutes()).slice(-2) + ":" +
+  ("00" + date.getSeconds()).slice(-2);
+
     await fetch("/api/pusher", {
       method: "POST",
-      body: JSON.stringify({ message: messageToSend, sender: user?.username }),
+      body: JSON.stringify({ message: value, sender: user?.username, sentAt: time }),
     });
   };
 
@@ -53,10 +53,11 @@ export default function Chat() {
         </div>
       )}
       <div>
-        {chats.map((chat, index) => (
+        {messages.map((chat, index) => (
           <div key={index}>
             <p>{chat.message}</p>
             <small>{chat.sender}</small>
+            <i>{chat.sentAt}</i>
           </div>
         ))}
       </div>
@@ -68,8 +69,7 @@ export default function Chat() {
       >
         <input
           type="text"
-          value={messageToSend}
-          onChange={(e) => setMessageToSend(e.target.value)}
+          ref={messageRef}
           placeholder="start typing...."
         />
         <button type="submit">Send</button>
